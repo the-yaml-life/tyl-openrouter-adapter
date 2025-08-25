@@ -1,25 +1,51 @@
 [package]
-name = "tyl-{module-name}"
+name = "tyl-openrouter-adapter"
 version = "0.1.0"
 edition = "2021"
 authors = ["TYL Framework Team"]
 license = "AGPL-3.0"
-repository = "https://github.com/the-yaml-life/tyl-{module-name}"
-description = "{Replace with module description}"
-homepage = "https://github.com/the-yaml-life/tyl-{module-name}"
-documentation = "https://docs.rs/tyl-{module-name}"
+repository = "https://github.com/the-yaml-life/tyl-openrouter-adapter"
+description = "OpenRouter adapter for TYL LLM inference port - unified access to multiple LLM providers"
+homepage = "https://github.com/the-yaml-life/tyl-openrouter-adapter"
+documentation = "https://docs.rs/tyl-openrouter-adapter"
 readme = "README.md"
-keywords = ["{module-keywords}", "hexagonal-architecture", "rust", "tyl-framework"]
-categories = ["development-tools", "rust-patterns"]
+keywords = ["openrouter", "llm", "inference", "hexagonal-architecture", "tyl-framework"]
+categories = ["development-tools", "web-programming::http-client", "rust-patterns"]
 
 [dependencies]
-# Common TYL dependencies - adjust as needed
+# TYL Framework Dependencies
+tyl-llm-inference-port = { git = "https://github.com/the-yaml-life/tyl-llm-inference-port.git", branch = "main" }
+tyl-errors = { git = "https://github.com/the-yaml-life/tyl-errors.git", branch = "main" }
+tyl-config = { git = "https://github.com/the-yaml-life/tyl-config.git", branch = "main" }
+tyl-logging = { git = "https://github.com/the-yaml-life/tyl-logging.git", branch = "main" }
+tyl-tracing = { git = "https://github.com/the-yaml-life/tyl-tracing.git", branch = "main" }
+
+# HTTP Client Dependencies
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+tokio = { version = "1.0", features = ["full"] }
+
+# Core Dependencies
+async-trait = "0.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "1.0"
-uuid = { version = "1.0", features = ["v4"] }
+uuid = { version = "1.0", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+url = "2.4"
 
-# Add module-specific dependencies here
+# Optional dependencies for extended functionality
+tracing = { version = "0.1", optional = true }
+tracing-subscriber = { version = "0.3", optional = true }
 
 [dev-dependencies]
-# Development dependencies for testing
+tokio-test = "0.4"
+wiremock = "0.6"
+futures = "0.3"
+env_logger = "0.11"
+
+[features]
+default = []
+# Enable tracing/logging support
+tracing = ["dep:tracing", "dep:tracing-subscriber"]
+# Enable all features
+full = ["tracing"]
